@@ -1,5 +1,6 @@
 .env
 data/
+yields/
 **/__pycache__
 *.parquet
 *.shp
