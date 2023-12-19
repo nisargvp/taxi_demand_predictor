@@ -2,12 +2,30 @@
 name = "src"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Nisarg Patel <nisargvp@umich.edu>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-
+python = ">=3.11.5,<3.12" 
+jupyter = "^1.0.0"
+pyarrow = "^13.0.0"
+numpy = "^1.26.0"
+tqdm = "^4.66.1"
+plotly = "^5.17.0"
+scikit-learn = "^1.3.2"
+xgboost = "^2.0.2"
+lightgbm = "^4.1.0"
+xarray = "^2023.11.0"
+matplotlib = "^3.8.2"
+netCDF4 = "1.6.5"
+h5py = "3.10.0"
+optuna = "^3.5.0"
+python-dotenv = "^1.0.0"
+pandas = "2.0.3"
+twofish = "0.3.0"
+hsfs = "3.4.5"
+cffi = "1.16.0"
+hopsworks = "3.4.3"
 
 [build-system]
 requires = ["poetry-core"]
