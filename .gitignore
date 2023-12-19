@@ -6,3 +6,19 @@ yields/
 *.shp
 *.pkl
 .TODOS
+
+# Update .gitignore
+# run in terminal: git add .gitignore
+# run in terminal: git add .gitignore
+
+# Remove files from repo but not local machine
+# for files: git rm --cached [file-name]
+# for folders: git rm -r --cached [folder-name]
+
+# Commit changes
+# git commit -m "Remove files from tracking and update .gitignore"
+
+# Push changes to github
+# git push origin [your-branch-name] or git push
+
+
