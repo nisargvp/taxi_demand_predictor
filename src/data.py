@@ -144,6 +144,8 @@ def transform_raw_data_into_ts_data(
     # add rows for (locations, pickup_hours) with 0 rides
     agg_rides_all_slots = add_missing_slots(agg_rides)
     
+    agg_rides_all_slots['pickup_ts'] = agg_rides_all_slots['pickup_hour'].astype(int) // 10**6
+    
     return agg_rides_all_slots
 
 def transform_ts_data_into_features_and_target(
@@ -155,7 +157,7 @@ def transform_ts_data_into_features_and_target(
     Slices and transposes data from time-series format into a (features, target) 
     format that we can use to train Supervised ML models.
     """
-    assert set(ts_data.columns) == {'pickup_hour', 'rides', 'pickup_location_id'}
+    assert set(ts_data.columns) == {'pickup_hour', 'rides', 'pickup_location_id', 'pickup_ts'}
     
     location_ids = ts_data['pickup_location_id'].unique()
     features = pd.DataFrame()
@@ -166,7 +168,7 @@ def transform_ts_data_into_features_and_target(
         # keep only ts data for this `location id`
         ts_data_one_location = ts_data.loc[
             ts_data.pickup_location_id == location_id,
-            ['pickup_hour', 'rides']
+            ['pickup_hour', 'rides', 'pickup_ts']
         ].sort_values(by='pickup_hour')
         
         # pre-compute cutoff indices to split dataframe rows
@@ -181,10 +183,12 @@ def transform_ts_data_into_features_and_target(
         x = np.ndarray(shape=(n_examples, input_seq_len), dtype=np.float32)
         y = np.ndarray(shape=(n_examples), dtype=np.float32)
         pickup_hours = []
+        pickup_ts = []
         for i, idx in enumerate(indices):
-            x[i, :] = ts_data_one_location.iloc[idx[0]:idx[1]]['rides'].values
-            y[i] = ts_data_one_location.iloc[idx[1]:idx[2]]['rides'].values[0]
+            x[i, :] = ts_data_one_location.iloc[idx[0]:idx[1]]['rides'].values     # historical rides upto the input seq len
+            y[i] = ts_data_one_location.iloc[idx[1]:idx[2]]['rides'].values[0]     # rides at the next hour
             pickup_hours.append(ts_data_one_location.iloc[idx[1]]['pickup_hour'])
+            pickup_ts.append(ts_data_one_location.iloc[idx[1]]['pickup_ts'])
         
         # numpy -> pandas
         features_one_location = pd.DataFrame(
@@ -192,6 +196,7 @@ def transform_ts_data_into_features_and_target(
             columns=[f'rides_previous_{i+1}_hour' for i in reversed(range(input_seq_len))]
         )
         features_one_location['pickup_hour'] = pickup_hours
+        features_one_location['pickup_ts'] = pickup_ts
         features_one_location['pickup_location_id'] = location_id
 
         # numpy -> pandas
@@ -227,3 +232,4 @@ def get_cutoff_indices_features_and_target(
             subseq_last_idx += step_size
 
         return indices
+    
