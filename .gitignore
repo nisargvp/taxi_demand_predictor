@@ -6,6 +6,7 @@ yields/
 *.shp
 *.pkl
 .TODOS
+.github/workflows
 
 # Update .gitignore
 # run in terminal: git add .gitignore
