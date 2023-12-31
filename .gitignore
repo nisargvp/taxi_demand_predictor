@@ -6,7 +6,10 @@ yields/
 *.shp
 *.pkl
 .TODOS
-.github/workflows
+
+
+# Staging status
+# git status
 
 # Update .gitignore
 # run in terminal: git add .gitignore

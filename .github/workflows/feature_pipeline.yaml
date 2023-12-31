@@ -1,0 +1,60 @@
+name: hourly-taxi-demand-feature-pipeline
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: 3.11.7
+  POETRY_VERSION: 1.7.1
+  POETRY_URL: https://install.python-poetry.org
+
+jobs:
+
+  feature_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    # Poetry cache depends on OS, Python version and Poetry version.
+    - name: Cache Poetry cache
+      uses: actions/cache@v1
+
+      with:
+        path: ~/.cache/pypoetry
+        key: poetry-cache-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}
+    
+    # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
+    - name: Cache Packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.local
+        key: poetry-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
+    
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install Poetry
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    
+    - name: Install Dependencies with Poetry
+      run: poetry install      
+
+    - name: Execute python workflows from bash script
+      env: 
+        HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
+        HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+      run: poetry run jupyter nbconvert --to notebook notebooks/12_feature_pipeline.ipynb --execute --inplace
+        
+    # - name: Run feature generation script
+    #   env: 
+    #     HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
+    #     HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+    #   run: make features
