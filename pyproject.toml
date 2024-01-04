@@ -26,6 +26,8 @@ twofish = "0.3.0"
 hsfs = "3.4.5"
 cffi = "1.16.0"
 hopsworks = "3.4.3"
+streamlit = "^1.29.0"
+geopandas = "^0.14.1"
 
 [build-system]
 requires = ["poetry-core"]
