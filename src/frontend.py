@@ -150,8 +150,7 @@ elif prev_hour_predictions_ready:
     st.subheader('⚠️ The most recent data is not yet available. Using last hour predictions')
 
 else:
-    raise Exception('Features are not available for the last 2 hours. Is your feature \
-                    pipeline up and running? 🤔')
+    raise Exception('Features are not available for the last 2 hours. Is your feature & inference pipeline up and running? 🤔')
 
 
 # with st.spinner(text="Loading ML model from the registry"):
