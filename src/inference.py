@@ -24,16 +24,6 @@ def get_model_predictions(model, features: pd.DataFrame) -> pd.DataFrame:
     results['pickup_location_id'] = features['pickup_location_id'].values
     results['predicted_demand'] = predictions.round(0)
     
-    return results
-
-
-def get_model_predictions(model, features: pd.DataFrame) -> pd.DataFrame:
-    """"""
-    predictions = model.predict(features)
-    
-    results = pd.DataFrame()
-    results['pickup_location_id'] = features['pickup_location_id'].values
-    results['predicted_demand'] = predictions.round(0)
     
     return results
 
@@ -80,8 +70,6 @@ def load_batch_of_features_from_store(
     location_ids = ts_data['pickup_location_id'].unique()
     assert len(ts_data) == config.N_FEATURES * len(location_ids), \
         "Time-series data is not complete. Make sure your feature pipeline is up and runnning."
-    # assert len(ts_data) <= (config.N_FEATURES - 1) * len(location_ids), \
-    #     "Time-series data is not complete. Make sure your feature pipeline is up and runnning."
         
     #  transpose time-series data as a feature vector, for each `pickup_location_id`
     x = np.ndarray(shape=(len(location_ids), n_features), dtype=np.float32)
@@ -143,6 +131,7 @@ def load_predictions_from_store(
             - `pickup_location_id`
             - `predicted_demand`
             - `pickup_hour`
+            - `pickup_ts`
     """
     from src.config import FEATURE_VIEW_PREDICTIONS_METADATA
     from src.feature_store_api import get_or_create_feature_view
