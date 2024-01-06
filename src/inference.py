@@ -142,8 +142,8 @@ def load_predictions_from_store(
     # get data from the feature view
     print(f'Fetching predictions for `pickup_hours` between {from_pickup_hour}  and {to_pickup_hour}')
     predictions = predictions_fv.get_batch_data(
-        start_time=from_pickup_hour - timedelta(days=30),
-        end_time=to_pickup_hour + timedelta(days=30)
+        start_time=from_pickup_hour - timedelta(days=1),
+        end_time=to_pickup_hour + timedelta(days=1)
     )
     
     # make sure datetimes are UTC aware

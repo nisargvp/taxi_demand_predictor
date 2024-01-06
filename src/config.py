@@ -31,15 +31,15 @@ FEATURE_GROUP_METADATA = FeatureGroupConfig(
 
 # TODO: remove FEATURE_VIEW_NAME and FEATURE_VIEW_VERSION, and use FEATURE_VIEW_METADATA instead
 FEATURE_VIEW_NAME = 'time_series_hourly_feature_view'
-FEATURE_VIEW_VERSION = 2
+FEATURE_VIEW_VERSION = 1
 FEATURE_VIEW_METADATA = FeatureViewConfig(
     name='time_series_hourly_feature_view',
-    version=2,
+    version=1,
     feature_group=FEATURE_GROUP_METADATA,
 )
 
 MODEL_NAME = "taxi_demand_predictor_next_hour"
-MODEL_VERSION = 2
+MODEL_VERSION = 1
 
 # added for monitoring purposes
 # TODO remove FEATURE_GROUP_MODEL_PREDICTIONS and use FEATURE_GROUP_PREDICTIONS_METADATA instead
