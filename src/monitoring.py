@@ -67,10 +67,10 @@ def load_predictions_and_actual_values_from_store(
     )
     
     # featch data from the feature view
-    # fetch predicted and actual values plus/minus 30 days to make sure we have enough data
+    # fetch predicted and actual values plus/minus 7 days to make sure we have enough data
     monitoring_df = monitoring_fv.get_batch_data(
-        start_time=from_date - timedelta(days=30),
-        end_time=to_date + timedelta(days=30)
+        start_time=from_date - timedelta(days=7),
+        end_time=to_date + timedelta(days=7)
     )
     
     # filter data to the time period we are interested in

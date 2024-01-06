@@ -125,7 +125,7 @@ with st.spinner(text="Fetching batch of features used in the last run"):
 
 with st.spinner(text="Fetching model predictions from the store"):
     predictions_df = _load_predictions_from_store(
-        from_pickup_hour=current_date - timedelta(hours=1),
+        from_pickup_hour=current_date - timedelta(hours=12),
         to_pickup_hour=current_date
     )
     st.sidebar.write('✅ Model predictions arrived')
