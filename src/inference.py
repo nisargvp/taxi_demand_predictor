@@ -54,8 +54,8 @@ def load_batch_of_features_from_store(
     
     # add plus minus margin to make sure we do not drop any observation
     ts_data = feature_view.get_batch_data(
-        start_time=fetch_data_from - timedelta(days=1),
-        end_time=fetch_data_to + timedelta(days=1)
+        start_time=fetch_data_from - timedelta(days=30),
+        end_time=fetch_data_to + timedelta(days=30)
     )
     
     # filter data to the time period we are interested in
@@ -142,8 +142,8 @@ def load_predictions_from_store(
     # get data from the feature view
     print(f'Fetching predictions for `pickup_hours` between {from_pickup_hour}  and {to_pickup_hour}')
     predictions = predictions_fv.get_batch_data(
-        start_time=from_pickup_hour - timedelta(days=1),
-        end_time=to_pickup_hour + timedelta(days=1)
+        start_time=from_pickup_hour - timedelta(days=30),
+        end_time=to_pickup_hour + timedelta(days=30)
     )
     
     # make sure datetimes are UTC aware
