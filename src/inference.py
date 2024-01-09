@@ -54,8 +54,8 @@ def load_batch_of_features_from_store(
     
     # add plus minus margin to make sure we do not drop any observation
     ts_data = feature_view.get_batch_data(
-        start_time=fetch_data_from - timedelta(days=1),
-        end_time=fetch_data_to + timedelta(days=1)
+        start_time=fetch_data_from - timedelta(days=30),
+        end_time=fetch_data_to + timedelta(days=30)
     )
     
     # filter data to the time period we are interested in
@@ -142,8 +142,8 @@ def load_predictions_from_store(
     # get data from the feature view
     print(f'Fetching predictions for `pickup_hours` between {from_pickup_hour}  and {to_pickup_hour}')
     predictions = predictions_fv.get_batch_data(
-        start_time=from_pickup_hour - timedelta(days=1),
-        end_time=to_pickup_hour + timedelta(days=1)
+        start_time=from_pickup_hour - timedelta(days=30),
+        end_time=to_pickup_hour + timedelta(days=30)
     )
     
     # make sure datetimes are UTC aware
@@ -151,8 +151,13 @@ def load_predictions_from_store(
     from_pickup_hour = pd.to_datetime(from_pickup_hour, utc=True)
     to_pickup_hour = pd.to_datetime(to_pickup_hour, utc=True)
     
+    # filter data to the time period we are interested in
+    from_pickup_ts_ = int(from_pickup_hour.timestamp() * 1000)
+    ts_pickup_ts_ = int(to_pickup_hour.timestamp() * 1000)
+    
     # make sure we keep only the range we want
-    predictions = predictions[predictions.pickup_hour.between(from_pickup_hour, to_pickup_hour)]
+    # predictions = predictions[predictions.pickup_hour.between(from_pickup_hour, to_pickup_hour)]
+    predictions = predictions[predictions.pickup_ts.between(from_pickup_ts_, ts_pickup_ts_)]
     
     # add `pickup_ts` column (DO WE NEED IT? WHY is it in FEATURE_VIEW_PREDICTIONS_METADATA)
     # predictions['pickup_ts'] = predictions['pickup_hour'].astype(int) // 10**6
