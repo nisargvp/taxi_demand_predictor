@@ -40,6 +40,46 @@ def validate_raw_data(
     return rides
 
 
+def fetch_ride_events_from_data_warehouse(
+    from_date: datetime,
+    to_date: datetime,
+    ) -> pd.DataFrame:
+    """
+    This function is used to simulate production data by sampling historical data 
+    from 52 weeks ago (i.e. 1 year)
+    """
+    rides = pd.DataFrame()
+    
+    if len(set([from_date, to_date])) == 1:
+        date_ = date - pd.offsets.DateOffset(years=1)
+        rides = load_raw_data(year=date_.year, months=date_.month)
+    
+    else:
+        # fetching data for all concerned months using load_raw_data
+        dates_to_fetch = pd.date_range(
+            start=from_date, 
+            end=to_date, 
+            freq='MS'
+        )
+        
+        for date in dates_to_fetch:
+            date_ = date - pd.offsets.DateOffset(years=1)
+            rides_date = load_raw_data(year=date_.year, months=date_.month)
+            rides = pd.concat([rides, rides_date])
+
+
+    # shift the data to pretend this is recent data 
+    rides['pickup_datetime'] += pd.offsets.DateOffset(years=1)
+
+    rides = rides[rides['pickup_datetime'] >= from_date]
+    rides = rides[rides['pickup_datetime'] <= to_date]    # include to date as we want it to convert to features and target
+
+    rides.sort_values(by=['pickup_location_id', 'pickup_datetime'], inplace=True)
+
+    return rides
+
+
+
 def load_raw_data(
     year: int,
     months: Optional[List[int]] = None
@@ -152,7 +192,7 @@ def transform_ts_data_into_features_and_target(
     ts_data: pd.DataFrame,
     input_seq_len: int,
     step_size: int
-) -> pd.DataFrame:
+) -> Tuple[pd.DataFrame, pd.Series]:
     """
     Slices and transposes data from time-series format into a (features, target) 
     format that we can use to train Supervised ML models.
@@ -200,7 +240,7 @@ def transform_ts_data_into_features_and_target(
         features_one_location['pickup_location_id'] = location_id
 
         # numpy -> pandas
-        targets_one_location = pd.DataFrame(y, columns=['target_rides_next_hour'])
+        targets_one_location = pd.DataFrame(y, columns=[f'target_rides_next_hour'])
         
         # concatenate results
         features = pd.concat([features, features_one_location])
@@ -208,6 +248,7 @@ def transform_ts_data_into_features_and_target(
         
     features.reset_index(inplace=True, drop=True)
     targets.reset_index(inplace=True, drop=True)
+    # print(f'{features.head()=}')
     
     return features, targets['target_rides_next_hour']
     

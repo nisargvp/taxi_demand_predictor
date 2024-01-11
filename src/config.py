@@ -10,39 +10,27 @@ HOPSWORKS_PROJECT_NAME = "taxi_dmd"
 try:
     HOPSWORKS_API_KEY = os.environ['HOPSWORKS_API_KEY']
 except:
-    raise Exception("Create a .env file on the project ro=]ot with the HOPSWORKS_API_KEY")
+    raise Exception("Create a .env file on the project root with the HOPSWORKS_API_KEY")
 
-# FEATURE_GROUP_NAME = 'time_series_hourly_feature_group'
-# FEATURE_GROUP_VERSION = 1
-# FEATURE_VIEW_NAME = 'time_series_hourly_feature_view'
-# FEATURE_VIEW_VERSION = 1
-
-# TODO: remove FEATURE_GROUP_NAME and FEATURE_GROUP_VERSION, and use FEATURE_GROUP_METADATA instead
-FEATURE_GROUP_NAME = 'time_series_hourly_feature_group'
-FEATURE_GROUP_VERSION = 1
 FEATURE_GROUP_METADATA = FeatureGroupConfig(
     name='time_series_hourly_feature_group',
-    version=1,
+    version=3,
     description='Feature group with hourly time-series data of historical taxi rides',
     primary_key=['pickup_location_id', 'pickup_ts'],
     event_time='pickup_ts',
     online_enabled=True,
 )
 
-# TODO: remove FEATURE_VIEW_NAME and FEATURE_VIEW_VERSION, and use FEATURE_VIEW_METADATA instead
-FEATURE_VIEW_NAME = 'time_series_hourly_feature_view'
-FEATURE_VIEW_VERSION = 2
 FEATURE_VIEW_METADATA = FeatureViewConfig(
     name='time_series_hourly_feature_view',
-    version=2,
+    version=3,
     feature_group=FEATURE_GROUP_METADATA,
 )
 
 MODEL_NAME = "taxi_demand_predictor_next_hour"
-MODEL_VERSION = 2
+MODEL_VERSION = 3
 
 # added for monitoring purposes
-# TODO remove FEATURE_GROUP_MODEL_PREDICTIONS and use FEATURE_GROUP_PREDICTIONS_METADATA instead
 FEATURE_GROUP_MODEL_PREDICTIONS = 'model_predictions_feature_group'
 FEATURE_GROUP_PREDICTIONS_METADATA = FeatureGroupConfig(
     name='model_predictions_feature_group',
@@ -53,16 +41,17 @@ FEATURE_GROUP_PREDICTIONS_METADATA = FeatureGroupConfig(
     online_enabled=True
 )
 
-# TODO remove FEATURE_VIEW_MODEL_PREDICTIONS and use FEATURE_VIEW_PREDICTIONS_METADATA instead
-FEATURE_VIEW_MODEL_PREDICTIONS = 'model_predictions_feature_view'
+# For a new feature view create a training set in hopsworks
+# open the hopsworks.ai dashboard, navigate to this feature view, and create a dummy training dataset. 
+# It does not really matter what options you choose to create one. It is just important that you created one.
 FEATURE_VIEW_PREDICTIONS_METADATA = FeatureViewConfig(
     name='model_predictions_feature_view',
-    version=1,
+    version=3,
     feature_group=FEATURE_GROUP_PREDICTIONS_METADATA,
 )
 
 MONITORING_FV_NAME = 'monitoring_feature_view'
-MONITORING_FV_VERSION = 1
+MONITORING_FV_VERSION = 3
 
 # number of historical values our model needs to generate predictions
 N_FEATURES = 28*24

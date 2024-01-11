@@ -1,12 +1,12 @@
 name: inference-pipeline
 
 on:
-  workflow_run:
-    workflows: ["feature-pipeline"]
-    types:
-      - completed
-#   schedule:
-#     - cron: '30 * * * *'
+  # workflow_run:
+  #   workflows: ["feature-pipeline"]
+  #   types:
+  #     - completed
+  schedule:
+    - cron: '30 * * * *'
 
   workflow_dispatch:
 
@@ -21,11 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     # Poetry cache depends on OS, Python version and Poetry version.
     - name: Cache Poetry cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2
 
       with:
         path: ~/.cache/pypoetry
@@ -33,13 +33,13 @@ jobs:
     
     # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
     - name: Cache Packages
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.local
         key: poetry-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
     
     - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     
@@ -51,17 +51,17 @@ jobs:
     - name: Install Dependencies
       run: poetry install
 
-    - name: Execute python workflows from bash script
-      env: 
-        HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
-        HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
-      run: poetry run jupyter nbconvert --to notebook notebooks/14_inference_pipeline.ipynb # --execute --inplace
-        
-    # - name: Generating new batch of predictions
+    # - name: Execute python workflows from bash script
     #   env: 
     #     HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
     #     HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
-    #     COMET_ML_API_KEY: ${{ secrets.COMET_ML_API_KEY }}
-    #     COMET_ML_WORKSPACE: ${{ secrets.COMET_ML_WORKSPACE }}
-    #     COMET_ML_PROJECT_NAME: ${{ secrets.COMET_ML_PROJECT_NAME }}
-    #   run: make inference
+    #   run: poetry run jupyter nbconvert --to notebook notebooks/14_inference_pipeline.ipynb # --execute --inplace
+        
+    - name: Generating new batch of predictions
+      env: 
+        HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
+        HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+        COMET_ML_API_KEY: ${{ secrets.COMET_ML_API_KEY }}
+        COMET_ML_WORKSPACE: ${{ secrets.COMET_ML_WORKSPACE }}
+        COMET_ML_PROJECT_NAME: ${{ secrets.COMET_ML_PROJECT_NAME }}
+      run: make inference

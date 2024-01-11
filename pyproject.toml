@@ -28,6 +28,9 @@ cffi = "1.16.0"
 hopsworks = "3.4.3"
 streamlit = "^1.29.0"
 geopandas = "^0.14.1"
+comet-ml = "^3.35.5"
+fire = "^0.5.0"
+retry = "^0.9.2"
 
 [build-system]
 requires = ["poetry-core"]
