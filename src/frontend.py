@@ -56,10 +56,7 @@ def load_shape_data_file() -> gpd.geodataframe.GeoDataFrame:
     if response.status_code == 200:
         open(path, "wb").write(response.content)
     else:
-        # raise Exception(f'{URL} is not available')
-        error_message = f'Error accessing {URL}: Status code {response.status_code}, Response: {response.text}'
-        st.write(error_message)  # Display the error in Streamlit
-        raise Exception(error_message)
+        raise Exception(f'{URL} is not available')
 
     # unzip file
     with zipfile.ZipFile(path, 'r') as zip_ref:
