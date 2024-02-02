@@ -54,8 +54,8 @@ def load_batch_of_features_from_store(
     
     # add plus minus margin to make sure we do not drop any observation
     ts_data = feature_view.get_batch_data(
-        start_time=fetch_data_from - timedelta(days=30),
-        end_time=fetch_data_to + timedelta(days=30)
+        start_time=fetch_data_from - timedelta(days=90),
+        end_time=fetch_data_to + timedelta(days=90)
     )
     
     # filter data to the time period we are interested in
