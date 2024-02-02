@@ -25,7 +25,7 @@ def run(date: datetime):
     # to the feature_pipeline. This way, if the pipeline fails for some reason,
     # we can still re-write data for that missing hour in a later run.
     rides = fetch_ride_events_from_data_warehouse(
-        from_date=(date - timedelta(days=60)),
+        from_date=(date - timedelta(days=180)),
         to_date=date
     )
     
