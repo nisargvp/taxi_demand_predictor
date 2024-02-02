@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # Poetry cache depends on OS, Python version and Poetry version.
     - name: Cache Poetry cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
 
       with:
         path: ~/.cache/pypoetry
@@ -29,13 +29,13 @@ jobs:
     
     # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
     - name: Cache Packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.local
         key: poetry-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
     
     - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     
