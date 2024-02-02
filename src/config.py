@@ -14,7 +14,7 @@ except:
 
 FEATURE_GROUP_METADATA = FeatureGroupConfig(
     name='time_series_hourly_feature_group',
-    version=4,
+    version=3,
     description='Feature group with hourly time-series data of historical taxi rides',
     primary_key=['pickup_location_id', 'pickup_ts'],
     event_time='pickup_ts',
@@ -23,7 +23,7 @@ FEATURE_GROUP_METADATA = FeatureGroupConfig(
 
 FEATURE_VIEW_METADATA = FeatureViewConfig(
     name='time_series_hourly_feature_view',
-    version=4,
+    version=3,
     feature_group=FEATURE_GROUP_METADATA,
 )
 
